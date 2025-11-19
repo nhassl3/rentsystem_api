@@ -1,0 +1,44 @@
+syntax = "proto3";
+package github.com.nhassl3.rentsystem.view;
+
+option go_package="github.com/nhassl3/rentsystem/v1;rentv1";
+
+import "validate/validate.proto";
+import "third_party/googleapis/google/api/field_behavior.proto";
+import "rentsystem/CarOptions.proto";
+
+service RentSystem {
+  rpc List(ListRequest) returns (ListResponse);
+  rpc Get(GetRequest) returns (GetResponse);
+}
+
+message ListRequest {
+  optional int64 category = 3;
+  int64 offset = 1 [
+    (validate.rules).int64 = { gte: 0; lte: 12 },
+    (google.api.field_behavior) = REQUIRED
+  ];
+  int64 limit = 2 [
+    (validate.rules).int64 = { in: [3, 6, 9, 12]},
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message ListResponse {
+  repeated CarProp cars = 1;
+}
+
+message GetRequest {
+  oneof identifier {
+    string name = 1 [
+      (validate.rules).string = { min_len: 3 }
+    ];
+    int64 id = 2 [
+      (validate.rules).int64.gt = 0
+    ];
+  }
+}
+
+message GetResponse {
+  CarProp car = 1;
+}

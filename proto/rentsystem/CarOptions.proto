@@ -1,0 +1,117 @@
+syntax = "proto3";
+
+package github.com.nhassl3.rentsystem;
+
+option go_package = "github.com/nhassl3/rentsystem/v1;rentv1";
+
+import "validate/validate.proto";
+import "third_party/googleapis/google/api/field_behavior.proto";
+
+message CarProp {
+  string VIN = 1 [
+    (validate.rules).string.pattern = "^[A-HJ-NPR-Z0-9]{17}$",
+    (google.api.field_behavior) = REQUIRED
+  ]; // UNIQUER IDENTIFIER CAR CODE
+  string brand = 2 [
+    (validate.rules).string = { min_len: 3, max_len: 56 },
+    (google.api.field_behavior) = REQUIRED
+  ];
+  string model = 3 [
+    (validate.rules).string = { min_len: 3, max_len: 64 },
+    (google.api.field_behavior) = REQUIRED
+  ];
+  Engine engine = 4;
+  Transmission transmission = 5;
+  Dimensions dimensions = 6;
+  int64 fuel_consumption = 7 [
+    (validate.rules).int64 = { gte: 3, lte: 150 },
+    (google.api.field_behavior) = REQUIRED
+  ];
+  optional int64 max_velocity = 8 [
+    (validate.rules).int64 = { gte: 80, lte: 405 },
+    (google.api.field_behavior) = OPTIONAL
+  ];
+  optional float acceleration = 9 [
+    (validate.rules).float.gte = 4,
+    (google.api.field_behavior) = OPTIONAL
+  ];
+  float price = 10 [
+    (validate.rules).float.gte = 150000,
+    (google.api.field_behavior) = REQUIRED
+  ];
+  float rent_price = 11 [
+    (validate.rules).float.gte = 1000,
+    (google.api.field_behavior) = REQUIRED
+  ];
+  string classification = 12 [
+    (validate.rules).string.pattern = "^[A-FJMS]{1}$"
+  ];
+}
+
+enum FuelTypes {
+  DIESEL = 0;
+  PETROL = 1;
+  ELECTRIC = 2;
+}
+
+message Engine {
+  FuelTypes fuel_type = 1 [
+    (validate.rules).enum.defined_only = true,
+    (google.api.field_behavior) = REQUIRED
+  ];
+  float volume = 2 [
+    (validate.rules).float = { gte: 0.5, lte: 6.7 },
+    (google.api.field_behavior) = REQUIRED
+  ];
+  int64 power = 3 [
+    (validate.rules).int64 = { gte: 28, lte: 2300 },
+    (google.api.field_behavior) = REQUIRED
+  ];
+  int64 torque = 4 [
+    (validate.rules).int64 = { gte: 100, lte:  1600 },
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+enum Gearbox {
+  MT = 0;
+  AT = 1;
+  AMT = 2;
+  CVT = 3;
+}
+
+enum DriveType {
+  FWD = 0;
+  AWD = 1;
+  RWD = 2;
+  FOUR_WD = 3;
+}
+
+message Transmission {
+  Gearbox gearbox = 1 [
+    (validate.rules).enum.defined_only = true,
+    (google.api.field_behavior) = REQUIRED
+  ];
+  int64 number_gears = 2 [
+    (validate.rules).int64 = { gte: 2, lte: 9},
+    (google.api.field_behavior) = REQUIRED
+  ];
+  DriveType drive_type = 3 [
+    (validate.rules).enum.defined_only = true,
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message Dimensions {
+  float length = 1;
+  float width = 2;
+  float height = 3;
+  float weight = 4 [
+    (validate.rules).float = { gte: 0.5, lte: 3 },
+    (google.api.field_behavior) = REQUIRED
+  ];
+  string radius = 5 [
+    (validate.rules).string.pattern = "[rR](1[3-9]|2[0-2])",
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
