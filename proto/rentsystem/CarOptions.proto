@@ -52,6 +52,7 @@ enum FuelTypes {
   DIESEL = 0;
   PETROL = 1;
   ELECTRIC = 2;
+  HYBRID = 3;
 }
 
 message Engine {
