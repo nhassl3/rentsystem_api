@@ -7,7 +7,7 @@ option go_package = "github.com/nhassl3/rentsystem_api/v1;rentv1";
 import "validate/validate.proto";
 import "third_party/googleapis/google/api/field_behavior.proto";
 
-message CarProp {
+message CarData {
   string VIN = 1 [
     (validate.rules).string.pattern = "^[A-HJ-NPR-Z0-9]{17}$",
     (google.api.field_behavior) = REQUIRED
@@ -23,28 +23,36 @@ message CarProp {
   Engine engine = 4;
   Transmission transmission = 5;
   Dimensions dimensions = 6;
-  int64 fuel_consumption = 7 [
+  OtherSets others = 7;
+}
+
+message OtherSets {
+  int64 fuel_consumption = 1 [
     (validate.rules).int64 = { gte: 3, lte: 150 },
     (google.api.field_behavior) = REQUIRED
   ];
-  optional int64 max_velocity = 8 [
+  optional int64 max_velocity = 2 [
     (validate.rules).int64 = { gte: 80, lte: 405 },
     (google.api.field_behavior) = OPTIONAL
   ];
-  optional float acceleration = 9 [
+  optional float acceleration = 3 [
     (validate.rules).float.gte = 4,
     (google.api.field_behavior) = OPTIONAL
   ];
-  float price = 10 [
+  string classification = 4 [
+    (validate.rules).string.pattern = "^[A-FJMS]{1}$"
+  ];
+}
+
+message CarProp {
+  CarData data = 1;
+  float price = 2 [
     (validate.rules).float.gte = 150000,
     (google.api.field_behavior) = REQUIRED
   ];
-  float rent_price = 11 [
+  float rent_price = 3 [
     (validate.rules).float.gte = 1000,
     (google.api.field_behavior) = REQUIRED
-  ];
-  string classification = 12 [
-    (validate.rules).string.pattern = "^[A-FJMS]{1}$"
   ];
 }
 
