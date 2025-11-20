@@ -35,6 +35,408 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on CarData with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *CarData) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CarData with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in CarDataMultiError, or nil if none found.
+func (m *CarData) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CarData) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if !_CarData_VIN_Pattern.MatchString(m.GetVIN()) {
+		err := CarDataValidationError{
+			field:  "VIN",
+			reason: "value does not match regex pattern \"^[A-HJ-NPR-Z0-9]{17}$\"",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetBrand()); l < 3 || l > 56 {
+		err := CarDataValidationError{
+			field:  "Brand",
+			reason: "value length must be between 3 and 56 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetModel()); l < 3 || l > 64 {
+		err := CarDataValidationError{
+			field:  "Model",
+			reason: "value length must be between 3 and 64 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if all {
+		switch v := interface{}(m.GetEngine()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CarDataValidationError{
+					field:  "Engine",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CarDataValidationError{
+					field:  "Engine",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetEngine()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CarDataValidationError{
+				field:  "Engine",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetTransmission()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CarDataValidationError{
+					field:  "Transmission",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CarDataValidationError{
+					field:  "Transmission",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTransmission()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CarDataValidationError{
+				field:  "Transmission",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetDimensions()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CarDataValidationError{
+					field:  "Dimensions",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CarDataValidationError{
+					field:  "Dimensions",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetDimensions()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CarDataValidationError{
+				field:  "Dimensions",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetOthers()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CarDataValidationError{
+					field:  "Others",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CarDataValidationError{
+					field:  "Others",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetOthers()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CarDataValidationError{
+				field:  "Others",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return CarDataMultiError(errors)
+	}
+
+	return nil
+}
+
+// CarDataMultiError is an error wrapping multiple validation errors returned
+// by CarData.ValidateAll() if the designated constraints aren't met.
+type CarDataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CarDataMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CarDataMultiError) AllErrors() []error { return m }
+
+// CarDataValidationError is the validation error returned by CarData.Validate
+// if the designated constraints aren't met.
+type CarDataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CarDataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CarDataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CarDataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CarDataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CarDataValidationError) ErrorName() string { return "CarDataValidationError" }
+
+// Error satisfies the builtin error interface
+func (e CarDataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCarData.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CarDataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CarDataValidationError{}
+
+var _CarData_VIN_Pattern = regexp.MustCompile("^[A-HJ-NPR-Z0-9]{17}$")
+
+// Validate checks the field values on OtherSets with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *OtherSets) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on OtherSets with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in OtherSetsMultiError, or nil
+// if none found.
+func (m *OtherSets) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *OtherSets) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if val := m.GetFuelConsumption(); val < 3 || val > 150 {
+		err := OtherSetsValidationError{
+			field:  "FuelConsumption",
+			reason: "value must be inside range [3, 150]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if !_OtherSets_Classification_Pattern.MatchString(m.GetClassification()) {
+		err := OtherSetsValidationError{
+			field:  "Classification",
+			reason: "value does not match regex pattern \"^[A-FJMS]{1}$\"",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.MaxVelocity != nil {
+
+		if val := m.GetMaxVelocity(); val < 80 || val > 405 {
+			err := OtherSetsValidationError{
+				field:  "MaxVelocity",
+				reason: "value must be inside range [80, 405]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Acceleration != nil {
+
+		if m.GetAcceleration() < 4 {
+			err := OtherSetsValidationError{
+				field:  "Acceleration",
+				reason: "value must be greater than or equal to 4",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return OtherSetsMultiError(errors)
+	}
+
+	return nil
+}
+
+// OtherSetsMultiError is an error wrapping multiple validation errors returned
+// by OtherSets.ValidateAll() if the designated constraints aren't met.
+type OtherSetsMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m OtherSetsMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m OtherSetsMultiError) AllErrors() []error { return m }
+
+// OtherSetsValidationError is the validation error returned by
+// OtherSets.Validate if the designated constraints aren't met.
+type OtherSetsValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e OtherSetsValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e OtherSetsValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e OtherSetsValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e OtherSetsValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e OtherSetsValidationError) ErrorName() string { return "OtherSetsValidationError" }
+
+// Error satisfies the builtin error interface
+func (e OtherSetsValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sOtherSets.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = OtherSetsValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = OtherSetsValidationError{}
+
+var _OtherSets_Classification_Pattern = regexp.MustCompile("^[A-FJMS]{1}$")
+
 // Validate checks the field values on CarProp with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -56,45 +458,12 @@ func (m *CarProp) validate(all bool) error {
 
 	var errors []error
 
-	if !_CarProp_VIN_Pattern.MatchString(m.GetVIN()) {
-		err := CarPropValidationError{
-			field:  "VIN",
-			reason: "value does not match regex pattern \"^[A-HJ-NPR-Z0-9]{17}$\"",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if l := utf8.RuneCountInString(m.GetBrand()); l < 3 || l > 56 {
-		err := CarPropValidationError{
-			field:  "Brand",
-			reason: "value length must be between 3 and 56 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if l := utf8.RuneCountInString(m.GetModel()); l < 3 || l > 64 {
-		err := CarPropValidationError{
-			field:  "Model",
-			reason: "value length must be between 3 and 64 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if all {
-		switch v := interface{}(m.GetEngine()).(type) {
+		switch v := interface{}(m.GetData()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, CarPropValidationError{
-					field:  "Engine",
+					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -102,89 +471,20 @@ func (m *CarProp) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, CarPropValidationError{
-					field:  "Engine",
+					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetEngine()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return CarPropValidationError{
-				field:  "Engine",
+				field:  "Data",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
 		}
-	}
-
-	if all {
-		switch v := interface{}(m.GetTransmission()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CarPropValidationError{
-					field:  "Transmission",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CarPropValidationError{
-					field:  "Transmission",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetTransmission()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CarPropValidationError{
-				field:  "Transmission",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if all {
-		switch v := interface{}(m.GetDimensions()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CarPropValidationError{
-					field:  "Dimensions",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CarPropValidationError{
-					field:  "Dimensions",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetDimensions()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CarPropValidationError{
-				field:  "Dimensions",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if val := m.GetFuelConsumption(); val < 3 || val > 150 {
-		err := CarPropValidationError{
-			field:  "FuelConsumption",
-			reason: "value must be inside range [3, 150]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
 	}
 
 	if m.GetPrice() < 150000 {
@@ -207,47 +507,6 @@ func (m *CarProp) validate(all bool) error {
 			return err
 		}
 		errors = append(errors, err)
-	}
-
-	if !_CarProp_Classification_Pattern.MatchString(m.GetClassification()) {
-		err := CarPropValidationError{
-			field:  "Classification",
-			reason: "value does not match regex pattern \"^[A-FJMS]{1}$\"",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if m.MaxVelocity != nil {
-
-		if val := m.GetMaxVelocity(); val < 80 || val > 405 {
-			err := CarPropValidationError{
-				field:  "MaxVelocity",
-				reason: "value must be inside range [80, 405]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.Acceleration != nil {
-
-		if m.GetAcceleration() < 4 {
-			err := CarPropValidationError{
-				field:  "Acceleration",
-				reason: "value must be greater than or equal to 4",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
 	}
 
 	if len(errors) > 0 {
@@ -326,10 +585,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CarPropValidationError{}
-
-var _CarProp_VIN_Pattern = regexp.MustCompile("^[A-HJ-NPR-Z0-9]{17}$")
-
-var _CarProp_Classification_Pattern = regexp.MustCompile("^[A-FJMS]{1}$")
 
 // Validate checks the field values on Engine with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
