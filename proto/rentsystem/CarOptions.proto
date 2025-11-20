@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package github.com.nhassl3.rentsystem;
 
-option go_package = "github.com/nhassl3/rentsystem/v1;rentv1";
+option go_package = "github.com/nhassl3/rentsystem_api/v1;rentv1";
 
 import "validate/validate.proto";
 import "third_party/googleapis/google/api/field_behavior.proto";
