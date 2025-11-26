@@ -26,12 +26,12 @@ gen-view: create-path install
 	@protoc \
 		-I \
 		proto \
-		proto/$(PROJECT_NAME)/view/$(PROJECT_NAME)_view.proto \
-		--go_out=./generated/go/$(PROJECT_NAME)/view \
+		proto/$(PROJECT_NAME)/$(PROJECT_NAME)_view.proto \
+		--go_out=./generated/go/$(PROJECT_NAME) \
 		--go_opt=paths=source_relative \
-		--go-grpc_out=./generated/go/$(PROJECT_NAME)/view \
+		--go-grpc_out=./generated/go/$(PROJECT_NAME) \
 		--go-grpc_opt=paths=source_relative \
-		--validate_out="lang=go:./generated/go/$(PROJECT_NAME)/view" \
+		--validate_out="lang=go:./generated/go/$(PROJECT_NAME)" \
 		--validate_opt=paths=source_relative
 
 
