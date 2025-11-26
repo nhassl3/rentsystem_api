@@ -1,4 +1,5 @@
 syntax = "proto3";
+
 package github.com.nhassl3.rentsystem.view;
 
 option go_package="github.com/nhassl3/rentsystem_api/view/v1;viewv1";
