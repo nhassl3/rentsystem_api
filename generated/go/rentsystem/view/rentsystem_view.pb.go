@@ -4,16 +4,16 @@
 // 	protoc        v3.21.12
 // source: rentsystem/view/rentsystem_view.proto
 
-package rentv1
+package viewv1
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
+	v1 "github.com/nhassl3/rentsystem_api/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -91,7 +91,7 @@ type ListResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Cars []*CarProp `protobuf:"bytes,1,rep,name=cars,proto3" json:"cars,omitempty"`
+	Cars []*v1.CarProp `protobuf:"bytes,1,rep,name=cars,proto3" json:"cars,omitempty"`
 }
 
 func (x *ListResponse) Reset() {
@@ -126,7 +126,7 @@ func (*ListResponse) Descriptor() ([]byte, []int) {
 	return file_rentsystem_view_rentsystem_view_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ListResponse) GetCars() []*CarProp {
+func (x *ListResponse) GetCars() []*v1.CarProp {
 	if x != nil {
 		return x.Cars
 	}
@@ -219,7 +219,7 @@ type GetResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Car *CarProp `protobuf:"bytes,1,opt,name=car,proto3" json:"car,omitempty"`
+	Car *v1.CarProp `protobuf:"bytes,1,opt,name=car,proto3" json:"car,omitempty"`
 }
 
 func (x *GetResponse) Reset() {
@@ -254,7 +254,7 @@ func (*GetResponse) Descriptor() ([]byte, []int) {
 	return file_rentsystem_view_rentsystem_view_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetResponse) GetCar() *CarProp {
+func (x *GetResponse) GetCar() *v1.CarProp {
 	if x != nil {
 		return x.Car
 	}
@@ -313,10 +313,10 @@ var file_rentsystem_view_rentsystem_view_proto_rawDesc = []byte{
 	0x74, 0x1a, 0x2f, 0x2e, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x6e,
 	0x68, 0x61, 0x73, 0x73, 0x6c, 0x33, 0x2e, 0x72, 0x65, 0x6e, 0x74, 0x73, 0x79, 0x73, 0x74, 0x65,
 	0x6d, 0x2e, 0x76, 0x69, 0x65, 0x77, 0x2e, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x42, 0x2d, 0x5a, 0x2b, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d,
+	0x73, 0x65, 0x42, 0x32, 0x5a, 0x30, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d,
 	0x2f, 0x6e, 0x68, 0x61, 0x73, 0x73, 0x6c, 0x33, 0x2f, 0x72, 0x65, 0x6e, 0x74, 0x73, 0x79, 0x73,
-	0x74, 0x65, 0x6d, 0x5f, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x31, 0x3b, 0x72, 0x65, 0x6e, 0x74, 0x76,
-	0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x74, 0x65, 0x6d, 0x5f, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x69, 0x65, 0x77, 0x2f, 0x76, 0x31, 0x3b,
+	0x76, 0x69, 0x65, 0x77, 0x76, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -337,7 +337,7 @@ var file_rentsystem_view_rentsystem_view_proto_goTypes = []interface{}{
 	(*ListResponse)(nil), // 1: github.com.nhassl3.rentsystem.view.ListResponse
 	(*GetRequest)(nil),   // 2: github.com.nhassl3.rentsystem.view.GetRequest
 	(*GetResponse)(nil),  // 3: github.com.nhassl3.rentsystem.view.GetResponse
-	(*CarProp)(nil),      // 4: github.com.nhassl3.rentsystem.CarProp
+	(*v1.CarProp)(nil),   // 4: github.com.nhassl3.rentsystem.CarProp
 }
 var file_rentsystem_view_rentsystem_view_proto_depIdxs = []int32{
 	4, // 0: github.com.nhassl3.rentsystem.view.ListResponse.cars:type_name -> github.com.nhassl3.rentsystem.CarProp
@@ -358,7 +358,6 @@ func file_rentsystem_view_rentsystem_view_proto_init() {
 	if File_rentsystem_view_rentsystem_view_proto != nil {
 		return
 	}
-	file_rentsystem_CarOptions_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_rentsystem_view_rentsystem_view_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ListRequest); i {
