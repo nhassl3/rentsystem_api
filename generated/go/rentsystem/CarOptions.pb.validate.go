@@ -607,6 +607,17 @@ func (m *Engine) validate(all bool) error {
 
 	var errors []error
 
+	if _, ok := _Engine_FuelType_NotInLookup[m.GetFuelType()]; ok {
+		err := EngineValidationError{
+			field:  "FuelType",
+			reason: "value must not be in list [NONE_FUEL_TYPE]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if _, ok := FuelTypes_name[int32(m.GetFuelType())]; !ok {
 		err := EngineValidationError{
 			field:  "FuelType",
@@ -728,6 +739,10 @@ var _ interface {
 	ErrorName() string
 } = EngineValidationError{}
 
+var _Engine_FuelType_NotInLookup = map[FuelTypes]struct{}{
+	0: {},
+}
+
 // Validate checks the field values on Transmission with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -750,6 +765,17 @@ func (m *Transmission) validate(all bool) error {
 
 	var errors []error
 
+	if _, ok := _Transmission_Gearbox_NotInLookup[m.GetGearbox()]; ok {
+		err := TransmissionValidationError{
+			field:  "Gearbox",
+			reason: "value must not be in list [NONE_GEARBOX]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if _, ok := Gearbox_name[int32(m.GetGearbox())]; !ok {
 		err := TransmissionValidationError{
 			field:  "Gearbox",
@@ -765,6 +791,17 @@ func (m *Transmission) validate(all bool) error {
 		err := TransmissionValidationError{
 			field:  "NumberGears",
 			reason: "value must be inside range [2, 9]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _Transmission_DriveType_NotInLookup[m.GetDriveType()]; ok {
+		err := TransmissionValidationError{
+			field:  "DriveType",
+			reason: "value must not be in list [NONE_DRIVE_TYPE]",
 		}
 		if !all {
 			return err
@@ -859,6 +896,14 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = TransmissionValidationError{}
+
+var _Transmission_Gearbox_NotInLookup = map[Gearbox]struct{}{
+	0: {},
+}
+
+var _Transmission_DriveType_NotInLookup = map[DriveType]struct{}{
+	0: {},
+}
 
 // Validate checks the field values on Dimensions with the rules defined in the
 // proto definition for this message. If any rules are violated, the first

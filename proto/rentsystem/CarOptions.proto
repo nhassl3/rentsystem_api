@@ -66,7 +66,7 @@ enum FuelTypes {
 
 message Engine {
   FuelTypes fuel_type = 1 [
-    (validate.rules).enum.defined_only = true,
+    (validate.rules).enum = {defined_only: true, not_in: 0},
     (google.api.field_behavior) = REQUIRED
   ];
   float volume = 2 [
@@ -85,6 +85,7 @@ message Engine {
 
 enum Gearbox {
   NONE_GEARBOX = 0;
+  MT = 1;
   AT = 2;
   AMT = 3;
   CVT = 4;
@@ -100,7 +101,7 @@ enum DriveType {
 
 message Transmission {
   Gearbox gearbox = 1 [
-    (validate.rules).enum.defined_only = true,
+    (validate.rules).enum = {defined_only: true, not_in: 0},
     (google.api.field_behavior) = REQUIRED
   ];
   int64 number_gears = 2 [
@@ -108,7 +109,7 @@ message Transmission {
     (google.api.field_behavior) = REQUIRED
   ];
   DriveType drive_type = 3 [
-    (validate.rules).enum.defined_only = true,
+    (validate.rules).enum = {defined_only: true, not_in: 0},
     (google.api.field_behavior) = REQUIRED
   ];
 }
