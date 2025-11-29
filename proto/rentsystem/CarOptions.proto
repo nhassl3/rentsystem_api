@@ -57,10 +57,11 @@ message CarProp {
 }
 
 enum FuelTypes {
-  DIESEL = 0;
-  PETROL = 1;
-  ELECTRIC = 2;
-  HYBRID = 3;
+  NONE_FUEL_TYPE = 0;
+  DIESEL = 1;
+  PETROL = 2;
+  ELECTRIC = 3;
+  HYBRID = 4;
 }
 
 message Engine {
@@ -83,17 +84,18 @@ message Engine {
 }
 
 enum Gearbox {
-  MT = 0;
-  AT = 1;
-  AMT = 2;
-  CVT = 3;
+  NONE_GEARBOX = 0;
+  AT = 2;
+  AMT = 3;
+  CVT = 4;
 }
 
 enum DriveType {
-  FWD = 0;
-  AWD = 1;
-  RWD = 2;
-  FOUR_WD = 3;
+  NONE_DRIVE_TYPE = 0;
+  FWD = 1;
+  AWD = 2;
+  RWD = 3;
+  FOUR_WD = 4;
 }
 
 message Transmission {
