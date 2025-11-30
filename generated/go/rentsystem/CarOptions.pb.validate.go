@@ -89,6 +89,19 @@ func (m *CarData) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if err := m._validateHostname(m.GetImagePath()); err != nil {
+		if ip := net.ParseIP(m.GetImagePath()); ip == nil {
+			err := CarDataValidationError{
+				field:  "ImagePath",
+				reason: "value must be a valid hostname, or ip address",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+	}
+
 	if all {
 		switch v := interface{}(m.GetEngine()).(type) {
 		case interface{ ValidateAll() error }:
@@ -212,6 +225,36 @@ func (m *CarData) validate(all bool) error {
 	return nil
 }
 
+func (m *CarData) _validateHostname(host string) error {
+	s := strings.ToLower(strings.TrimSuffix(host, "."))
+
+	if len(host) > 253 {
+		return errors.New("hostname cannot exceed 253 characters")
+	}
+
+	for _, part := range strings.Split(s, ".") {
+		if l := len(part); l == 0 || l > 63 {
+			return errors.New("hostname part must be non-empty and cannot exceed 63 characters")
+		}
+
+		if part[0] == '-' {
+			return errors.New("hostname parts cannot begin with hyphens")
+		}
+
+		if part[len(part)-1] == '-' {
+			return errors.New("hostname parts cannot end with hyphens")
+		}
+
+		for _, r := range part {
+			if (r < 'a' || r > 'z') && (r < '0' || r > '9') && r != '-' {
+				return fmt.Errorf("hostname parts can only contain alphanumeric characters or hyphens, got %q", string(r))
+			}
+		}
+	}
+
+	return nil
+}
+
 // CarDataMultiError is an error wrapping multiple validation errors returned
 // by CarData.ValidateAll() if the designated constraints aren't met.
 type CarDataMultiError []error
@@ -326,6 +369,35 @@ func (m *OtherSets) validate(all bool) error {
 			return err
 		}
 		errors = append(errors, err)
+	}
+
+	if all {
+		switch v := interface{}(m.GetCarYear()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, OtherSetsValidationError{
+					field:  "CarYear",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, OtherSetsValidationError{
+					field:  "CarYear",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetCarYear()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return OtherSetsValidationError{
+				field:  "CarYear",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
 	}
 
 	if m.MaxVelocity != nil {

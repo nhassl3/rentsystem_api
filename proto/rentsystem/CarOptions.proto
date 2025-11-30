@@ -6,6 +6,7 @@ option go_package = "github.com/nhassl3/rentsystem_api/v1;rentv1";
 
 import "validate/validate.proto";
 import "third_party/googleapis/google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
 
 message CarData {
   string VIN = 1 [
@@ -20,7 +21,11 @@ message CarData {
     (validate.rules).string = { min_len: 3, max_len: 64 },
     (google.api.field_behavior) = REQUIRED
   ];
-  Engine engine = 4;
+  string image_path = 9 [
+    (validate.rules).string.address = true,
+    (google.api.field_behavior) = REQUIRED
+  ];
+  Engine engine = 4;  
   Transmission transmission = 5;
   Dimensions dimensions = 6;
   OtherSets others = 7;
@@ -40,7 +45,11 @@ message OtherSets {
     (google.api.field_behavior) = OPTIONAL
   ];
   string classification = 4 [
-    (validate.rules).string.pattern = "^[A-FJMS]{1}$"
+    (validate.rules).string.pattern = "^[A-FJMS]{1}$",
+    (google.api.field_behavior) = REQUIRED
+  ];
+  google.protobuf.Timestamp car_year = 5 [
+    (google.api.field_behavior) = REQUIRED
   ];
 }
 
