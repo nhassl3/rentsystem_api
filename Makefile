@@ -1,4 +1,4 @@
-.PHONY: gen install gen-validate genall -DEFAULT-GOAL
+.PHONY: gen install gen-validate gen-admin
 
 PROJECT_NAME := "rentsystem"
 
@@ -34,5 +34,14 @@ gen-view: create-path install
 		--validate_out="lang=go:./generated/go/$(PROJECT_NAME)" \
 		--validate_opt=paths=source_relative
 
-
--DEFAULT-GOAL: genall
+gen-admin:
+	@protoc \
+	-I \
+	proto \
+	proto/$(PROJECT_NAME)/$(PROJECT_NAME)_admin.proto \
+	--go_out=./generated/go/$(PROJECT_NAME) \
+    		--go_opt=paths=source_relative \
+    		--go-grpc_out=./generated/go/$(PROJECT_NAME) \
+    		--go-grpc_opt=paths=source_relative \
+    		--validate_out="lang=go:./generated/go/$(PROJECT_NAME)" \
+    		--validate_opt=paths=source_relative

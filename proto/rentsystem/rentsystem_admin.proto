@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package github.com.nhassl3.rentsystem;
+
+option go_package = "github.com/nhassl3/rentsystem_api/v1;rentv1";
+
+import "rentsystem/CarOptions.proto";
+import "validate/validate.proto";
+
+service RentSystemAdmin {
+  rpc Save(SaveRequest) returns (SavedResponse);
+  rpc Update(UpdateRequest) returns (ChangedResponse);
+  rpc Delete(DeleteRequest) returns (ChangedResponse);
+  rpc Add(AddRequest) returns (SavedResponse);
+  rpc UpdatePrice(UpdatePriceRequest) returns (ChangedResponse);
+  rpc Remove(DeleteRequest) returns (ChangedResponse);
+}
+
+message SaveRequest {
+  CarData car = 1;
+}
+
+message UpdateRequest  {
+  optional CarData new_car = 1;
+}
+
+message UpdatePriceRequest {
+  optional float new_price = 2 [
+    (validate.rules).float.gte = 150000
+  ];
+  optional float new_rent_price = 3 [
+    (validate.rules).float.gte = 1000
+  ];
+}
+
+message DeleteRequest {
+  oneof identifier {
+    string name = 1;
+    int64 id = 2;
+  }
+}
+
+message AddRequest {
+  CarProp rent_car = 1;
+}
+
+message ChangedResponse {
+  bool success = 1;
+}
+
+message SavedResponse {
+  int64 id = 1;
+}
