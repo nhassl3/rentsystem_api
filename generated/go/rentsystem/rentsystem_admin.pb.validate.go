@@ -185,6 +185,35 @@ func (m *UpdateRequest) validate(all bool) error {
 
 	var errors []error
 
+	switch v := m.Identifier.(type) {
+	case *UpdateRequest_Name:
+		if v == nil {
+			err := UpdateRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Name
+	case *UpdateRequest_Id:
+		if v == nil {
+			err := UpdateRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Id
+	default:
+		_ = v // ensures v is used
+	}
+
 	if m.NewCar != nil {
 
 		if all {
@@ -317,6 +346,35 @@ func (m *UpdatePriceRequest) validate(all bool) error {
 	}
 
 	var errors []error
+
+	switch v := m.Identifier.(type) {
+	case *UpdatePriceRequest_Name:
+		if v == nil {
+			err := UpdatePriceRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Name
+	case *UpdatePriceRequest_Id:
+		if v == nil {
+			err := UpdatePriceRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Id
+	default:
+		_ = v // ensures v is used
+	}
 
 	if m.NewPrice != nil {
 
