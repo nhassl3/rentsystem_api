@@ -637,33 +637,55 @@ func (m *AddRequest) validate(all bool) error {
 
 	var errors []error
 
-	if all {
-		switch v := interface{}(m.GetRentCar()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AddRequestValidationError{
-					field:  "RentCar",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, AddRequestValidationError{
-					field:  "RentCar",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
+	if m.GetPrice() < 150000 {
+		err := AddRequestValidationError{
+			field:  "Price",
+			reason: "value must be greater than or equal to 150000",
 		}
-	} else if v, ok := interface{}(m.GetRentCar()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return AddRequestValidationError{
-				field:  "RentCar",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
+		if !all {
+			return err
 		}
+		errors = append(errors, err)
+	}
+
+	if m.GetRentPrice() < 1000 {
+		err := AddRequestValidationError{
+			field:  "RentPrice",
+			reason: "value must be greater than or equal to 1000",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	switch v := m.Identifier.(type) {
+	case *AddRequest_Name:
+		if v == nil {
+			err := AddRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Name
+	case *AddRequest_Id:
+		if v == nil {
+			err := AddRequestValidationError{
+				field:  "Identifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for Id
+	default:
+		_ = v // ensures v is used
 	}
 
 	if len(errors) > 0 {
