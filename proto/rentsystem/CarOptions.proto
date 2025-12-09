@@ -22,7 +22,6 @@ message CarData {
     (google.api.field_behavior) = REQUIRED
   ];
   string image_path = 9 [
-    (validate.rules).string.address = true,
     (google.api.field_behavior) = REQUIRED
   ];
   Engine engine = 4;  
